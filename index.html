@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Anime Style Heart Tree Birthday Animation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+  body, html {
+    margin: 0; padding: 0; overflow: hidden;
+    background: black;
+    color: white;
+    font-family: 'Comfortaa', cursive;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #container {
+    position: relative;
+    width: 90vw;
+    max-width: 520px;
+    height: 90vh;
+    max-height: 720px;
+    background: black;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 0 30px #ff4d6d88;
+  }
+  .text-overlay {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 10%;
+    font-size: 1.4rem;
+    padding: 0 20px;
+    line-height: 1.4;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+    user-select: none;
+    pointer-events: none;
+  }
+  .text-overlay.show {
+    opacity: 1;
+  }
+  svg.character {
+    position: absolute;
+    width: 80px;
+    height: 140px;
+    bottom: 12%;
+    opacity: 0;
+    filter: drop-shadow(0 0 4px #ff4d6dcc);
+  }
+  svg.character.girl {
+    left: -100px;
+  }
+  svg.character.boy {
+    right: -100px;
+  }
+  #seed {
+    position: absolute;
+    bottom: 26%;
+    left: 48%;
+    width: 18px;
+    height: 18px;
+    opacity: 0;
+    filter: drop-shadow(0 0 4px #964b00cc);
+  }
+  #tree-heart {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    width: 160px;
+    height: 140px;
+    transform-origin: center bottom;
+    transform: translateX(-50%) scale(0);
+    filter: drop-shadow(0 0 10px #ff4d6dcc);
+    animation: pulseHeart 3s ease-in-out infinite;
+  }
+  .water-drop {
+    position: absolute;
+    width: 18px;
+    height: 16px;
+    fill: #ff4d6d;
+    opacity: 0;
+    transform-origin: center;
+    filter: drop-shadow(0 0 3px #ff4d6d);
+  }
+  .heart-petal {
+    position: fixed;
+    width: 20px;
+    height: 18px;
+    fill: #ff4d6d;
+    opacity: 0.8;
+    animation: petalFall 6s linear forwards;
+    filter: drop-shadow(0 0 5px #ff4d6dcc);
+  }
+  /* Eye blinking */
+  .eye {
+    animation: blink 5s linear infinite;
+    transform-origin: center;
+  }
+  .eye.delay {
+    animation-delay: 2.5s;
+  }
+  /* Animations */
+  @keyframes blink {
+    0%, 20%, 100% { transform: scaleY(1); }
+    10% { transform: scaleY(0.1); }
+  }
+  @keyframes girlWalkIn {
+    0% { left: -100px; opacity: 0; transform: translateX(0) translateY(0); }
+    20% { opacity: 1; }
+    100% { left: 15%; opacity: 1; transform: translateX(0) translateY(0); }
+  }
+  @keyframes boyWalkIn {
+    0% { right: -100px; opacity: 0; transform: translateX(0) translateY(0); }
+    20% { opacity: 1; }
+    100% { right: 15%; opacity: 1; transform: translateX(0) translateY(0); }
+  }
+  @keyframes curvedWalk {
+    0% { transform: translateX(0) translateY(0); }
+    50% { transform: translateX(20px) translateY(-5px); }
+    100% { transform: translateX(0) translateY(0); }
+  }
+  @keyframes seedAppear {
+    from {opacity: 0; transform: scale(0);}
+    to {opacity: 1; transform: scale(1);}
+  }
+  @keyframes waterDropFall {
+    0% {opacity: 1; transform: translateY(0) scale(0);}
+    10% {opacity: 1; transform: translateY(25px) scale(1);}
+    100% {opacity: 0; transform: translateY(60px) scale(0);}
+  }
+  @keyframes treeGrow {
+    from {transform: translateX(-50%) scale(0);}
+    to {transform: translateX(-50%) scale(1);}
+  }
+  @keyframes petalFall {
+    0% {opacity: 0.8; transform: translateY(0) rotate(0);}
+    100% {opacity: 0; transform: translateY(600px) rotate(360deg);}
+  }
+  @keyframes pulseHeart {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.08); }
+  }
+  #dance-area {
+    position: absolute;
+    bottom: 7%;
+    width: 100%;
+    height: 160px;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    pointer-events: none;
+  }
+  .dance-character {
+    width: 80px;
+    height: 140px;
+    filter: drop-shadow(0 0 8px #ff4d6dcc);
+    animation: curvedWalk 3s ease-in-out infinite alternate;
+  }
+  .dance-character.girl {
+    animation-delay: 0s;
+  }
+  .dance-character.boy {
+    animation-delay: 1.5s;
+  }
+</style>
+</head>
+<body>
+<div id="container" aria-label="Anime Style Heart Tree Birthday Animation" role="main">
+
+  <div id="start-text" class="text-overlay show" role="banner" aria-live="polite" aria-atomic="true">
+    Любви всей моей жизн—С днём рождения, мой Шохрух… сегодня мир кажется ярче, потому что это твой день.
+  </div>
+
+  <!-- Girl character -->
+  <svg class="character girl" viewBox="0 0 64 96" aria-label="Girl character" role="img" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="32" cy="20" r="16" fill="#ffccd9" />
+    <!-- Eyes -->
+    <ellipse cx="22" cy="20" rx="5" ry="7" fill="#fff" />
+    <circle class="eye" cx="22" cy="20" r="3" fill="#5a2a2a" />
+    <ellipse cx="42" cy="20" rx="5" ry="7" fill="#fff" />
+    <circle class="eye delay" cx="42" cy="20" r="3" fill="#5a2a2a" />
+    <!-- Hair -->
+    <path fill="#c14266" d="M10 10 Q 32 0 54 10 Q 50 45 30 50 Q 10 45 10 10z" />
+    <!-- Body -->
+    <rect x="18" y="45" width="28" height="44" rx="12" ry="12" fill="#da7ca8" />
+  </svg>
+
+  <!-- Seed -->
+  <svg id="seed" viewBox="0 0 30 30" aria-label="Seed" role="img" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="15" cy="15" r="8" fill="#5a2100"/>
+  </svg>
+
+  <!-- Heart Shape Definitions -->
+  <svg style="display:none">
+    <symbol id="heart" viewBox="0 0 24 22">
+      <path fill="currentColor" d="M12 21s-6.5-4.3-9.6-7.7c-1.2-1.3-1.7-3-1.1-4.5A5.3 5.3 0 0 1 9 3c1.5 0 2.8 0.9 3 2.2 0.2-1.3 1.6-2.3 3-2.2a5.3 5.3 0 0 1 8.6 6.6c-0.6 1.6-1.9 2.9-3.4 4.3C18.3 16.7 12 21 12 21z"/>
+    </symbol>
+  </svg>
+
+  <!-- Tree Heart -->
+  <svg id="tree-heart" viewBox="0 0 24 22" aria-label="Heart shaped tree" role="img" xmlns="http://www.w3.org/2000/svg" fill="#ff4d6d">
+    <use href="#heart" />
+  </svg>
+
+  <!-- Boy character -->
+  <svg class="character boy" viewBox="0 0 64 96" aria-label="Boy character" role="img" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="32" cy="20" r="16" fill="#fad9b3" />
+    <!-- Eyes -->
+    <ellipse cx="22" cy="20" rx="5" ry="7" fill="#fff" />
+    <circle class="eye" cx="22" cy="20" r="3" fill="#4c3a29" />
+    <ellipse cx="42" cy="20" rx="5" ry="7" fill="#fff" />
+    <circle class="eye delay" cx="42" cy="20" r="3" fill="#4c3a29" />
+    <!-- Hair -->
+    <path fill="#6e4e2a" d="M10 10 Q 32 0 54 11 Q 50 45 30 48 Q 10 42 10 10z" />
+    <!-- Body -->
+    <rect x="18" y="45" width="28" height="44" rx="12" ry="12" fill="#4287d1" />
+  </svg>
+
+  <!-- Dance Area -->
+  <div id="dance-area" aria-label="Couple dancing" style="position:absolute; bottom:7%; width:100%; height:160px; opacity:0;">
+    <svg class="dance-character girl" viewBox="0 0 64 96" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" style="margin-right: 40px;">
+      <circle cx="32" cy="20" r="16" fill="#ffccd9" />
+      <ellipse cx="22" cy="20" rx="5" ry="7" fill="#fff" />
+      <circle class="eye" cx="22" cy="20" r="3" fill="#5a2a2a" />
+      <ellipse cx="42" cy="20" rx="5" ry="7" fill="#fff" />
+      <circle class="eye delay" cx="42" cy="20" r="3" fill="#5a2a2a" />
+      <path fill="#c14266" d="M10 10 Q 32 0 54 10 Q 50 45 30 50 Q 10 45 10 10z" />
+      <rect x="18" y="45" width="28" height="44" rx="12" ry="12" fill="#da7ca8" />
+    </svg>
+    <svg class="dance-character boy" viewBox="0 0 64 96" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" style="margin-left: 40px;">
+      <circle cx="32" cy="20" r="16" fill="#fad9b3" />
+      <ellipse cx="22" cy="20" rx="5" ry="7" fill="#fff" />
+      <circle class="eye" cx="22" cy="20" r="3" fill="#4c3a29" />
+      <ellipse cx="42" cy="20" rx="5" ry="7" fill="#fff" />
+      <circle class="eye delay" cx="42" cy="20" r="3" fill="#4c3a29" />
+      <path fill="#6e4e2a" d="M10 10 Q 32 0 54 11 Q 50 45 30 48 Q 10 42 10 10z" />
+      <rect x="18" y="45" width="28" height="44" rx="12" ry="12" fill="#4287d1" />
+    </svg>
+  </div>
+
+  <!-- Ending text -->
+  <div id="end-text" class="text-overlay" style="top:auto; bottom: 12%;" role="contentinfo" aria-live="polite" aria-atomic="true">
+    Итак, это для тебя, моя любовь, в твой особенный день. Пусть этот год будет таким же прекрасным, как и ты. С днём рождения ещё раз — всем сердцем, всегда твоя.
+  </div>
+
+</div>
+
+<script>
+  const container = document.getElementById('container');
+  const girl = document.querySelector('.character.girl');
+  const boy = document.querySelector('.character.boy');
+  const seed = document.getElementById('seed');
+  const treeHeart = document.getElementById('tree-heart');
+  const danceArea = document.getElementById('dance-area');
+  const startText = document.getElementById('start-text');
+  const endText = document.getElementById('end-text');
+
+  const timings = {
+    startTextDuration: 3500,
+    girlWalkDuration: 3500,
+    seedAppearDuration: 1500,
+    waterDuration: 3500,
+    treeGrowDuration: 4500,
+    boyWalkDuration: 3500,
+    giveHeartDuration: 2200,
+    danceDuration: 9000,
+    endTextDuration: 5500
+  };
+
+  function createWaterDrop() {
+    const drop = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    drop.setAttribute("viewBox", "0 0 24 22");
+    drop.style.position = "absolute";
+    drop.style.bottom = "38%";
+    drop.style.left = "49%";
+    drop.style.width = "20px";
+    drop.style.height = "18px";
+    drop.style.fill = "#ff4d6d";
+    drop.style.opacity = "1";
+    drop.style.transformOrigin = "center";
+    drop.style.willChange = "transform, opacity";
+    drop.innerHTML = '<use href="#heart" />';
+    container.appendChild(drop);
+    drop.animate([
+      { transform: 'translateY(0) scale(0)', opacity: 0 },
+      { transform: 'translateY(30px) scale(1)', opacity: 1, offset: 0.1 },
+      { transform: 'translateY(60px) scale(0)', opacity: 0 }
+    ], {
+      duration: 2800,
+      easing: 'ease-in',
+      iterations: 1
+    }).onfinish = () => drop.remove();
+  }
+
+  function createHeartPetals(duration) {
+    const interval = 250;
+    let elapsed = 0;
+    const petalsTimer = setInterval(() => {
+      const petal = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      petal.setAttribute("viewBox", "0 0 24 22");
+      petal.style.position = "fixed";
+      petal.style.width = "22px";
+      petal.style.height = "20px";
+      petal.style.fill = "#ff4d6d";
+      petal.style.opacity = "0.8";
+      petal.style.left = Math.random() * 100 + "vw";
+      petal.style.top = "-40px";
+      container.appendChild(petal);
+      petal.innerHTML = '<use href="#heart" />';
+
+      petal.animate([
+        { transform: `translateY(0) rotate(0deg)`, opacity: 0.8 },
+        { transform: `translateY(600px) rotate(360deg)`, opacity: 0 }
+      ], {
+        duration: 7000 + Math.random()*3500,
+        easing: 'linear',
+        iterations: 1
+      }).onfinish = () => petal.remove();
+
+      elapsed += interval;
+      if (elapsed > duration) clearInterval(petalsTimer);
+    }, interval);
+  }
+
+  async function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function animateSequence() {
+    startText.classList.add('show');
+    await delay(timings.startTextDuration);
+    startText.classList.remove('show');
+
+    girl.style.opacity = '1';
+    girl.style.animation = `girlWalkIn ${timings.girlWalkDuration}ms forwards ease-out`;
+    await delay(timings.girlWalkDuration);
+
+    seed.style.opacity = '1';
+    seed.style.animation = `seedAppear ${timings.seedAppearDuration}ms forwards ease-in`;
+    await delay(timings.seedAppearDuration);
+
+    for(let i = 0; i < 5; i++) {
+      createWaterDrop();
+      await delay(700);
+    }
+
+    treeHeart.style.animation = `treeGrow ${timings.treeGrowDuration}ms forwards ease-in-out`;
+    await delay(timings.treeGrowDuration);
+
+    boy.style.opacity = '1';
+    boy.style.animation = `boyWalkIn ${timings.boyWalkDuration}ms forwards ease-out`;
+    await delay(timings.boyWalkDuration);
+
+    boy.style.filter = 'drop-shadow(0 0 15px #ff4d6d)';
+    await delay(timings.giveHeartDuration);
+    boy.style.filter = '';
+
+    danceArea.style.opacity = '1';
+    createHeartPetals(timings.danceDuration);
+    await delay(timings.danceDuration);
+
+    endText.classList.add('show');
+    await delay(timings.endTextDuration);
+  }
+
+  animateSequence();
+</script>
+</body>
+</html>
